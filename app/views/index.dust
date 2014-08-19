@@ -1,26 +1,23 @@
 {>"layouts/layout"/}
 {<js}
-  <script src="/public/javascripts/home.js"></script>
+  <script src="/public/views/index/index.js"></script>
 {/js}
 {<content}
-  <h1>Angular Component Testing</h1>
-  <p>
-    <i>I understand this uses the double [[. It's a quick and dirty sample :)</i>
-  </p>
-  <h2>Testing Login.Controller</h2>
-  <div ng-controller="login.controller">
-    [[welcomeText]]
-  </div>
-  <br/>
-  <hr/>
-  <h2>Testing Registration.Controller</h2>
-  <div ng-controller="registration.controller">
-    [[welcomeText]]
-  </div>
-  <br/>
-  <hr/>
-  <h2>Testing Registration.Controller2</h2>
-  <div ng-controller="registration.controller2">
-    [[welcomeText]]
+  <div ng-controller="index.controller">
+    <h1>Angular Component Testing</h1>
+    <p>
+      <i>I understand this uses the double [[. It's a quick and dirty sample :)</i>
+    </p>
+    <br/>
+    Welcome Text: [[welcomeText]]
+    <br/>
+    <br/>
+    <h2>Testing Login Component</h2>
+    <div ng-include="'/components/login/login.html'"></div>
+    <br/>
+    <hr/>
+    <br/>
+    <h2>Testing Registration Component</h2>
+    <div ng-include="'/components/registration/registration.html'"></div>
   </div>
 {/content}

@@ -2,7 +2,7 @@
 
 angular.module("AngularComponents", [
   "login",
-  "registration",
+  "registration"
 ], function($interpolateProvider){
   $interpolateProvider.startSymbol('[[');
   $interpolateProvider.endSymbol(']]');
