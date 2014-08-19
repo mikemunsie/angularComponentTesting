@@ -1,0 +1,26 @@
+{>"layouts/layout"/}
+{<js}
+  <script src="/public/javascripts/home.js"></script>
+{/js}
+{<content}
+  <h1>Angular Component Testing</h1>
+  <p>
+    <i>I understand this uses the double [[. It's a quick and dirty sample :)</i>
+  </p>
+  <h2>Testing Login.Controller</h2>
+  <div ng-controller="login.controller">
+    [[welcomeText]]
+  </div>
+  <br/>
+  <hr/>
+  <h2>Testing Registration.Controller</h2>
+  <div ng-controller="registration.controller">
+    [[welcomeText]]
+  </div>
+  <br/>
+  <hr/>
+  <h2>Testing Registration.Controller2</h2>
+  <div ng-controller="registration.controller2">
+    [[welcomeText]]
+  </div>
+{/content}

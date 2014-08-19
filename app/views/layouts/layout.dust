@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html ng-app="AngularComponents">
+  <head>
+    <title>{title}</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <link rel="stylesheet" href="/public/stylesheets/style.css">
+    
+    <!-- Angular Scripts (pardon the lack of minification) -->
+    <script src="/public/bower_components/angularjs/angular.js"></script>
+    <script src="/public/javascripts/components/login/config.js"></script>
+    <script src="/public/javascripts/components/login/controllers/controller.js"></script>
+    <script src="/public/javascripts/components/registration/config.js"></script>
+    <script src="/public/javascripts/components/registration/controllers/controller.js"></script>
+    <script src="/public/javascripts/components/registration/controllers/controller2.js"></script>
+    <script src="/public/javascripts/components/registration/services/service.js"></script>
+    {+js/}
+  </head>
+  <body>
+    <div class="content">
+       {+content/}
+    </div>
+</body>
+</html>
