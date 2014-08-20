@@ -1,4 +1,4 @@
 node_modules
-./public/vendor
-./public/javascripts-min
-./public/stylesheets
+./app/public/vendor
+./app/public/javascripts-min
+./app/public/stylesheets
