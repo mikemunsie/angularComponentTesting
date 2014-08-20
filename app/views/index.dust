@@ -1,6 +1,8 @@
 {>"layouts/layout"/}
+{<title}Index page!{/title}
+{<app}Index{/app}
 {<js}
-  <script src="/public/views/index/index.js"></script>
+  <script src="/public/javascripts-min/controllers/index/index-controller.js"></script>
 {/js}
 {<content}
   <div ng-controller="index.controller">

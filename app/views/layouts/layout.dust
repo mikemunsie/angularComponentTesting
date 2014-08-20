@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html ng-app="AngularComponents">
+<html ng-app="{+app/}">
   <head>
-    <title>{title}</title>
+    <title>{+title/}</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
     <link rel="stylesheet" href="/public/stylesheets/style.css">
@@ -9,19 +9,13 @@
     <!-- Load in the componentsCSS -->
     <link rel="stylesheet" href="/public/components/login/login.css"/>
     <link rel="stylesheet" href="/public/components/registration/registration.css"/>
-
-    <!-- Angular Scripts (pardon the lack of minification) -->
-    <script src="/public/vendor/angularjs/angular.js"></script>
-
-    <!-- Load in the componentsJS -->
-    <script src="/public/components/login/login.js"></script>
-    <script src="/public/components/login/login-controller.js"></script>
-    <script src="/public/components/registration/registration.js"></script>
-    <script src="/public/components/registration/registration-controller.js"></script>
-    <script src="/public/components/registration/registration-service.js"></script>
     
-    <!-- Load the App -->
-    <script src="/public/app.js"></script>
+    <!-- Angular Goodies -->
+    <script src="/public/vendor/angularjs/angular.js"></script>
+    <script src="/public/javascripts-min/components/components-all.js"></script>
+    
+    <!-- Our App -->
+    <script src="/public/javascripts-min/{+app/}-app.js"></script>
     {+js/}
   </head>
   <body>

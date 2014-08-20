@@ -1,4 +1,4 @@
 angular.module("registration")
   .controller("registration.controller", ["$scope", "registration.service", function($scope, $registrationService){
-    $scope.welcomeText = "Login - " + $registrationService.test;
+    $scope.welcomeText = "Registration!! - " + $registrationService.test;
   }]);
