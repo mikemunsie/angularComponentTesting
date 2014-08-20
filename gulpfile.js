@@ -26,8 +26,7 @@ var config = {
       "./app/views/**/*"
     ],
     browsers: ['google chrome'],
-    proxy: 'http://localhost:9000',
-    reloadDelay: 3000
+    proxy: 'http://localhost:9000'
   },
   compass: {
     files: "./app/sass/**/*.sass",
