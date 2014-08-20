@@ -1,1 +1,0 @@
-angular.module("login").controller("login.controller",["$scope","registration.service",function($scope){$scope.welcomeText="Login Controller"}]);
