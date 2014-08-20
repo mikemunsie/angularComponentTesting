@@ -8,6 +8,7 @@ var shell = require('gulp-shell');
 var gulpUtil = require('gulp-util');
 var browserSync = require('browser-sync');
 var path =  require('path');
+var minifyCSS = require('gulp-minify-css');
 var spawn = require('child_process').spawn;
 var node;
 
@@ -28,19 +29,27 @@ var config = {
     proxy: 'http://localhost:9000',
     reloadDelay: 3000
   },
-  sass: {
-    files: "./app/sass/**/*",
-    dest: "./app/public/stylesheets",
-    compass: {
-      bundle_exec: true,
-      style: "compressed",
-      css: "./app/public/stylesheets",
-      sass: "./app/sass",
-      img: "./app/public/images",
-      project: path.join(__dirname),
-      relative: true,
-      comments: false
-    }
+  compass: {
+    files: "./app/sass/**/*.sass",
+    bundle_exec: true,
+    style: "compressed",
+    css: "./app/public/stylesheets",
+    sass: "./app/sass",
+    img: "./app/public/images",
+    project: path.join(__dirname),
+    relative: true,
+    comments: false
+  },
+  compassComponents: {
+    files: "./app/public/components/**/*.sass",
+    bundle_exec: true,
+    style: "compressed",
+    css: "./app/public/components",
+    sass: "./app/public/components",
+    img: "./app/public/images",
+    project: path.join(__dirname),
+    relative: true,
+    comments: false
   },
   uglify: {
     files: [
@@ -78,8 +87,19 @@ gulp.task('server', function() {
  * Compass Tasks
  */
 gulp.task('compass', function(){
-  return gulp.src(config.sass.files)
-    .pipe(compass(config.sass.compass));
+  return gulp.src(config.compass.files)
+    .pipe(compass(config.compass));
+});
+
+/**
+ * Compass Components Tasks
+ */
+gulp.task('compassComponents', function(){
+  return gulp.src(config.compassComponents.files)
+    .pipe(compass(config.compassComponents))
+    .pipe(concat('components.css'))
+    .pipe(minifyCSS({keepBreaks:true}))
+    .pipe(gulp.dest(config.compass.css));
 });
 
 /**
@@ -149,7 +169,8 @@ gulp.task('watch', function() {
     "!./app/public/vendor/**/*",
     "!./app/public/javascripts-min/**/*"
   ], ['uglify', 'concatAllComponents', 'concatPackages']);
-  gulp.watch("./app/sass/**/*", ['compass']);
+  gulp.watch(config.compass.files, ['compass']);
+  gulp.watch(config.compassComponents.files, ['compassComponents']);
   gulp.watch([
     "./app/views/**/*",
     "./app/routes/**/*"
@@ -166,9 +187,25 @@ gulp.task('setupDevEnvironment', function() {
 /**
  * Default (Production ready)
  */
-gulp.task('default', ['uglify', 'concatAllComponents', 'concatPackages', 'compass']);
+gulp.task('default', [
+  'uglify', 
+  'concatAllComponents', 
+  'concatPackages', 
+  'compass', 
+  'compassComponents'
+]);
 
 /**
  * Development task will watch files, automatically refresh, and more
  */
-gulp.task('dev', ['setupDevEnvironment', 'server', 'browserSync', 'uglify', 'concatAllComponents', 'concatPackages', 'compass', 'watch']);
+gulp.task('dev', [
+  'setupDevEnvironment', 
+  'server', 
+  'browserSync', 
+  'uglify', 
+  'concatAllComponents', 
+  'concatPackages', 
+  'compass', 
+  'compassComponents', 
+  'watch'
+]);

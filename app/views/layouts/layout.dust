@@ -4,11 +4,8 @@
     <title>{+title/}</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
-    <link rel="stylesheet" href="/public/stylesheets/style.css">
-      
-    <!-- Load in the componentsCSS -->
-    <link rel="stylesheet" href="/public/components/login/login.css"/>
-    <link rel="stylesheet" href="/public/components/registration/registration.css"/>
+    <link rel="stylesheet" href="/public/stylesheets/style.css"/>
+    <link rel="stylesheet" href="/public/stylesheets/components.css"/>
     
     <!-- Angular Goodies -->
     <script src="/public/vendor/angularjs/angular.js"></script>
