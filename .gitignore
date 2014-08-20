@@ -1,4 +1,5 @@
 node_modules
+.sass-cache
 ./app/public/vendor
 ./app/public/javascripts-min
 ./app/public/stylesheets
