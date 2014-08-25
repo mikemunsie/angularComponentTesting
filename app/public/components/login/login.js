@@ -1,1 +1,4 @@
-angular.module("login", []);
+angular.module("components.login", [
+  "components.registration",
+  "components.auth"
+]);

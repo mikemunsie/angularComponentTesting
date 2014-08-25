@@ -1,1 +1,1 @@
-angular.module("registration", [])
+angular.module("components.registration", []);

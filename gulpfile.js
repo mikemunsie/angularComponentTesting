@@ -1,115 +1,157 @@
-var gulp = require('gulp');
-var walk = require('walk');
-var concat = require('gulp-concat');
-var uglify = require('gulp-uglify');
-var compass = require('gulp-compass');
-var gulpif = require('gulp-if');
-var shell = require('gulp-shell');
-var gulpUtil = require('gulp-util');
-var browserSync = require('browser-sync');
-var path =  require('path');
-var minifyCSS = require('gulp-minify-css');
-var spawn = require('child_process').spawn;
-var node;
+var gulp =        require('gulp'),
+    walk =        require('walk'),
+    concat =      require('gulp-concat'),
+    uglify =      require('gulp-uglify'),
+    compass =     require('gulp-compass'),
+    gulpif =      require('gulp-if'),
+    shell =       require('gulp-shell'),
+    gulpUtil =    require('gulp-util'),
+    browserSync = require('browser-sync'),
+    path =        require('path'),
+    minifyCSS =   require('gulp-minify-css'),
+    spawn =       require('child_process').spawn,
+    ngHtml2Js  =  require('gulp-ng-html2js'),
+    minifyHtml =  require('gulp-minify-html'),
+    node;
 
-var config = {
-  concat: {
-    files: "./app/public/**/*",
-    dest: "./app/public/packages/",
-    prefix: "package-",
-    packages: {
-    }
-  },
-  browserSync: {
-    files: [
-      "./app/public/**/*",
-      "./app/views/**/*"
-    ],
-    browsers: ['google chrome'],
-    proxy: 'http://localhost:9000'
-  },
-  compass: {
-    files: "./app/sass/**/*.sass",
-    bundle_exec: true,
-    style: "compressed",
-    css: "./app/public/stylesheets",
-    sass: "./app/sass",
-    img: "./app/public/images",
-    project: path.join(__dirname),
-    relative: true,
-    comments: false
-  },
-  compassComponents: {
-    files: "./app/public/components/**/*.sass",
-    bundle_exec: true,
-    style: "compressed",
-    css: "./app/public/components",
-    sass: "./app/public/components",
-    img: "./app/public/images",
-    project: path.join(__dirname),
-    relative: true,
-    comments: false
-  },
-  uglify: {
-    files: [
-      "./app/public/**/*.js", 
-      "!./app/public/javascripts-min/**/*",
-      "!./app/public/vendor/**/*"
-    ],
-    dest: "./app/public/javascripts-min",
-    mangle: false
-  }
-};
-
-// Keep track of dev environment
 var devEnvironment = false;
-
+  
 /**
  * Browser Sync Settings
  */
 gulp.task('browserSync', function() {
-  browserSync.init([], config.browserSync);
-})
+  browserSync.init([], {
+    "files": [
+      "./app/public/**/*",
+      "./app/public/views/**/*"
+    ],
+    "browsers": ['google chrome'],
+    "proxy": "http://localhost:9000"
+  });
+});
+
+/**
+ * Merge angular views into one compressed JS file
+ */
+gulp.task("combineAngularViewsAndComponentsHTMLToJS", [
+  "angularComponentsHTMLToJS",
+  "angularViewsHTMLToJS"
+], function(){
+  return gulp.src([
+    "./app/public/javascripts-min/components-views-htmlToJS/components.js",
+    "./app/public/javascripts-min/components-views-htmlToJS/views.js"
+  ])
+  .pipe(concat("all.js"))
+  .pipe(gulpif(devEnvironment, uglify({
+    mangle: false
+  })))
+  .pipe(gulp.dest("./app/public/javascripts-min/components-views-htmlToJS"));
+});
+
+/**
+ * Convert all angular components into JS file
+ */
+gulp.task('angularComponentsHTMLToJS', function(){
+  return gulp.src([
+    "./app/public/components/**/*.html"
+  ])
+  .pipe(minifyHtml({
+    empty: true,
+    spare: true,
+    quotes: true
+  }))
+  .pipe(ngHtml2Js({
+    moduleName: "componentsAndViewsHTMLToJS",
+    prefix: "/public/components/"
+  }))
+  .pipe(concat("components.js"))
+  .pipe(gulp.dest("./app/public/javascripts-min/components-views-htmlToJS/"));
+});
+
+/**
+ * Convert all angular views into JS file
+ */
+gulp.task("angularViewsHTMLToJS", function(){
+  return gulp.src([
+    "./app/public/views/**/*.html"
+  ])
+  .pipe(minifyHtml({
+    empty: true,
+    spare: true,
+    quotes: true
+  }))
+  .pipe(ngHtml2Js({
+    moduleName: "componentsAndViewsHTMLToJS",
+    prefix: "/public/views/"
+  }))
+  .pipe(concat("views.js"))
+  .pipe(gulp.dest("./app/public/javascripts-min/components-views-htmlToJS"));
+});
 
 /**
  * Start and stop server
  */
 gulp.task('server', function() {
-  if (node) node.kill()
+  if (node) node.kill();
   node = spawn('node', ['app/bin/www'], {stdio: 'inherit'});
   setTimeout(function(){
     browserSync.reload();
   }, 1000);
-})
+});
 
 /**
  * Compass Tasks
  */
 gulp.task('compass', function(){
-  return gulp.src(config.compass.files)
-    .pipe(compass(config.compass));
+  return gulp.src("./app/sass/**/*.sass")
+    .pipe(compass({
+      "bundle_exec": true,
+      "style": "compressed",
+      "css":  "./app/public/stylesheets/",
+      "sass": "./app/sass/",
+      "img": "./app/public/images/",
+      "project": path.join(__dirname),
+      "relative": true,
+      "comments": false
+    }));
 });
 
 /**
  * Compass Components Tasks
  */
 gulp.task('compassComponents', function(){
-  return gulp.src(config.compassComponents.files)
-    .pipe(compass(config.compassComponents))
+  return gulp.src("./app/public/components/**/*.sass")
+    .pipe(compass({
+      "files": "./app/public/components/**/*.sass",
+      "bundle_exec": true,
+      "style": "compressed",
+      "css": "./app/public/components/",
+      "sass": "./app/public/components/",
+      "img": "./app/public/images/",
+      "project": path.join(__dirname),
+      "relative": true,
+      "comments": false
+    }))
     .pipe(concat('components.css'))
-    .pipe(minifyCSS({keepBreaks:true}))
-    .pipe(gulp.dest(config.compass.css));
+    .pipe(minifyCSS({
+      keepBreaks:true
+    }))
+    .pipe(gulp.dest("./app/public/stylesheets/"));
 });
 
 /**
  * Uglify Task
  */
 gulp.task('uglify', [], function(){
-  return gulp.src(config.uglify.files)
+  return gulp.src([
+      "./app/public/**/*.js",
+      "!./app/public/javascripts-min/" + "/**/*",
+      "!./app/public/vendor/**/*"
+    ])
     .pipe(gulpif(!devEnvironment, uglify({
-      mangle: config.uglify.mangle
+      mangle: false
     })))
-    .pipe(gulp.dest(config.uglify.dest));
+    .pipe(gulp.dest("./app/public/javascripts-min/"));
 });
 
 /**
@@ -117,7 +159,7 @@ gulp.task('uglify', [], function(){
  */
 gulp.task('concatAllComponents', [], function(){
   var files = [];
-  walk.walkSync("./app/public/components", {
+  walk.walkSync("./app/public/components/", {
     listeners: {
       names: function (root, nodeNamesArray) {
         nodeNamesArray.sort(function (a, b) {
@@ -125,15 +167,15 @@ gulp.task('concatAllComponents', [], function(){
           if (a < b) return 1;
           return 0;
         });
-      }
-    , directories: function (root, dirStatsArray, next) {
+      },
+      directories: function (root, dirStatsArray, next) {
         next();
-      }
-    , file: function (root, stat, next) {
+      },
+      file: function (root, stat, next) {
         if(stat.name.indexOf(".js") < 0) return next();
         files.push(root + '/' + stat.name);
-      }
-    , errors: function (root, nodeStatsArray, next) {
+      },
+      errors: function (root, nodeStatsArray, next) {
         next();
       }
     }
@@ -143,19 +185,34 @@ gulp.task('concatAllComponents', [], function(){
     .pipe(gulpif(!devEnvironment, uglify({
       mangle: false
     })))
-    .pipe(gulp.dest('./app/public/javascripts-min/components/'));
+    .pipe(gulp.dest("./app/public/javascripts-min/components"));
 });
 
 /**
  * Concat Packages (these should be minified files, let Uglify finish first)
  */
-gulp.task('concatPackages', ["uglify"], function(){
+gulp.task('concatPackages', [
+  "uglify"
+], function(){
+  var package_prefix = "package-";
+  var packages = {
+    "index-app": [
+      "./app/public/vendor/angularjs/angular.min.js",
+      "./app/public/vendor/angular-route/angular-route.min.js",
+      "./app/public/vendor/angular-local-storage/angular-local-storage.min.js",
+      "./app/public/javascripts-min/components/components-all.js",
+      "./app/public/javascripts-min/components-views-htmlToJS/all.js",
+      "./app/public/javascripts-min/views/index/index-controller.js",
+      "./app/public/javascripts-min/views/dashboard/dashboard-controller.js",
+      "./app/public/javascripts-min/index-app.js"
+    ]
+  };
   var fileName = "";
-  Object.keys(config.concat.packages).forEach(function(key) {
-    fileName = config.concat.prefix + key + ".js";
-    gulp.src(config.concat.packages[key])
+  Object.keys(packages).forEach(function(key) {
+    fileName = package_prefix + key + ".js";
+    gulp.src(packages[key])
       .pipe(concat(fileName))
-      .pipe(gulp.dest(config.concat.dest));
+      .pipe(gulp.dest("./app/public/packages/"));
   });
 });
 
@@ -164,14 +221,18 @@ gulp.task('concatPackages', ["uglify"], function(){
  */
 gulp.task('watch', function() {
   gulp.watch([
-    "./app/public/**/*", 
-    "!./app/public/vendor/**/*",
-    "!./app/public/javascripts-min/**/*"
+    "./app/public/**/*",
+    "!" + "./app/public/vendor**/*",
+    "!" + "./app/public/javascripts-min/" + "**/*"
   ], ['uglify', 'concatAllComponents', 'concatPackages']);
-  gulp.watch(config.compass.files, ['compass']);
-  gulp.watch(config.compassComponents.files, ['compassComponents']);
   gulp.watch([
-    "./app/views/**/*",
+    "./app/public/components/" + "**/*.html",
+    "./app/public/views/**/*.html"
+  ], ['combineAngularViewsAndComponentsHTMLToJS']);
+  gulp.watch("./app/sass/**/*.sass", ['compass']);
+  gulp.watch("./app/public/components/**/*.sass", ['compassComponents']);
+  gulp.watch([
+    "./app/public/views/**/*",
     "./app/routes/**/*"
   ], ['server']);
 });
@@ -183,14 +244,19 @@ gulp.task('setupDevEnvironment', function() {
   devEnvironment = true;
 });
 
+// ========================================
+// Gulp Runtime Config
+// ========================================
+
 /**
  * Default (Production ready)
  */
 gulp.task('default', [
-  'uglify', 
-  'concatAllComponents', 
-  'concatPackages', 
-  'compass', 
+  'uglify',
+  'concatAllComponents',
+  'combineAngularViewsAndComponentsHTMLToJS',
+  'concatPackages',
+  'compass',
   'compassComponents'
 ]);
 
@@ -198,13 +264,14 @@ gulp.task('default', [
  * Development task will watch files, automatically refresh, and more
  */
 gulp.task('dev', [
-  'setupDevEnvironment', 
-  'server', 
-  'browserSync', 
-  'uglify', 
-  'concatAllComponents', 
-  'concatPackages', 
-  'compass', 
-  'compassComponents', 
+  'setupDevEnvironment',
+  'server',
+  'browserSync',
+  'uglify',
+  'concatAllComponents',
+  'combineAngularViewsAndComponentsHTMLToJS',
+  'concatPackages',
+  'compass',
+  'compassComponents',
   'watch'
 ]);

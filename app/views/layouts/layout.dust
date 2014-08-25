@@ -7,13 +7,9 @@
     <link rel="stylesheet" href="/public/stylesheets/style.css"/>
     <link rel="stylesheet" href="/public/stylesheets/components.css"/>
     
-    <!-- Angular Goodies -->
-    <script src="/public/vendor/angularjs/angular.js"></script>
-    <script src="/public/javascripts-min/components/components-all.js"></script>
+    <!-- Our Application -->
+    <script src="/public/packages/package-{+app/}-app.js"></script>
     
-    <!-- Our App -->
-    <script src="/public/javascripts-min/{+app/}-app.js"></script>
-    {+js/}
   </head>
   <body>
     <div class="content">

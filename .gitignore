@@ -3,3 +3,5 @@ node_modules
 app/public/vendor/
 app/public/javascripts-min/
 app/public/stylesheets/
+.bundle/
+Gemfile.lock
