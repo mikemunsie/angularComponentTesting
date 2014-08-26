@@ -23,7 +23,7 @@ gulp.task('browserSync', function() {
   browserSync.init([], {
     "files": [
       "./app/public/**/*",
-      "./app/public/views/**/*"
+      "./app/views/**/*"
     ],
     "browsers": ['google chrome'],
     "proxy": "http://localhost:9000"
@@ -38,22 +38,22 @@ gulp.task("combineAngularViewsAndComponentsHTMLToJS", [
   "angularViewsHTMLToJS"
 ], function(){
   return gulp.src([
-    "./app/public/javascripts-min/components-views-htmlToJS/components.js",
-    "./app/public/javascripts-min/components-views-htmlToJS/views.js"
+    "./app/public/javascripts-min/angular-components-views-htmlToJS/angular-components.js",
+    "./app/public/javascripts-min/angular-components-views-htmlToJS/views.js"
   ])
   .pipe(concat("all.js"))
   .pipe(gulpif(devEnvironment, uglify({
     mangle: false
   })))
-  .pipe(gulp.dest("./app/public/javascripts-min/components-views-htmlToJS"));
+  .pipe(gulp.dest("./app/public/javascripts-min/angular-components-views-htmlToJS"));
 });
 
 /**
- * Convert all angular components into JS file
+ * Convert all angular angular-components into JS file
  */
 gulp.task('angularComponentsHTMLToJS', function(){
   return gulp.src([
-    "./app/public/components/**/*.html"
+    "./app/public/angular-components/**/*.html"
   ])
   .pipe(minifyHtml({
     empty: true,
@@ -62,10 +62,10 @@ gulp.task('angularComponentsHTMLToJS', function(){
   }))
   .pipe(ngHtml2Js({
     moduleName: "componentsAndViewsHTMLToJS",
-    prefix: "/public/components/"
+    prefix: "/public/angular-components/"
   }))
-  .pipe(concat("components.js"))
-  .pipe(gulp.dest("./app/public/javascripts-min/components-views-htmlToJS/"));
+  .pipe(concat("angular-components.js"))
+  .pipe(gulp.dest("./app/public/javascripts-min/angular-components-views-htmlToJS/"));
 });
 
 /**
@@ -73,7 +73,7 @@ gulp.task('angularComponentsHTMLToJS', function(){
  */
 gulp.task("angularViewsHTMLToJS", function(){
   return gulp.src([
-    "./app/public/views/**/*.html"
+    "./app/public/angular-views/**/*.html"
   ])
   .pipe(minifyHtml({
     empty: true,
@@ -82,10 +82,10 @@ gulp.task("angularViewsHTMLToJS", function(){
   }))
   .pipe(ngHtml2Js({
     moduleName: "componentsAndViewsHTMLToJS",
-    prefix: "/public/views/"
+    prefix: "/public/angular-views/"
   }))
   .pipe(concat("views.js"))
-  .pipe(gulp.dest("./app/public/javascripts-min/components-views-htmlToJS"));
+  .pipe(gulp.dest("./app/public/javascripts-min/angular-components-views-htmlToJS"));
 });
 
 /**
@@ -117,22 +117,22 @@ gulp.task('compass', function(){
 });
 
 /**
- * Compass Components Tasks
+ * Compass angular-components Tasks
  */
-gulp.task('compassComponents', function(){
-  return gulp.src("./app/public/components/**/*.sass")
+gulp.task('compassAngularComponents', function(){
+  return gulp.src("./app/public/angular-components/**/*.sass")
     .pipe(compass({
-      "files": "./app/public/components/**/*.sass",
+      "files": "./app/public/angular-components/**/*.sass",
       "bundle_exec": true,
       "style": "compressed",
-      "css": "./app/public/components/",
-      "sass": "./app/public/components/",
+      "css": "./app/public/angular-components/",
+      "sass": "./app/public/angular-components/",
       "img": "./app/public/images/",
       "project": path.join(__dirname),
       "relative": true,
       "comments": false
     }))
-    .pipe(concat('components.css'))
+    .pipe(concat('angular-components.css'))
     .pipe(minifyCSS({
       keepBreaks:true
     }))
@@ -155,11 +155,11 @@ gulp.task('uglify', [], function(){
 });
 
 /**
- * Concat all components into one single file
+ * Concat all angular-components into one single file
  */
-gulp.task('concatAllComponents', [], function(){
+gulp.task('concatAllAngularComponents', [], function(){
   var files = [];
-  walk.walkSync("./app/public/components/", {
+  walk.walkSync("./app/public/angular-components/", {
     listeners: {
       names: function (root, nodeNamesArray) {
         nodeNamesArray.sort(function (a, b) {
@@ -181,11 +181,11 @@ gulp.task('concatAllComponents', [], function(){
     }
   });
   gulp.src(files)
-    .pipe(concat('components-all.js'))
+    .pipe(concat('angular-components-all.js'))
     .pipe(gulpif(!devEnvironment, uglify({
       mangle: false
     })))
-    .pipe(gulp.dest("./app/public/javascripts-min/components"));
+    .pipe(gulp.dest("./app/public/javascripts-min/angular-components"));
 });
 
 /**
@@ -200,11 +200,11 @@ gulp.task('concatPackages', [
       "./app/public/vendor/angularjs/angular.min.js",
       "./app/public/vendor/angular-route/angular-route.min.js",
       "./app/public/vendor/angular-local-storage/angular-local-storage.min.js",
-      "./app/public/javascripts-min/components/components-all.js",
-      "./app/public/javascripts-min/components-views-htmlToJS/all.js",
-      "./app/public/javascripts-min/views/index/index-controller.js",
-      "./app/public/javascripts-min/views/dashboard/dashboard-controller.js",
-      "./app/public/javascripts-min/index-app.js"
+      "./app/public/javascripts-min/angular-components/angular-components-all.js",
+      "./app/public/javascripts-min/angular-components-views-htmlToJS/all.js",
+      "./app/public/javascripts-min/angular-views/index/index-controller.js",
+      "./app/public/javascripts-min/angular-views/dashboard/dashboard-controller.js",
+      "./app/public/javascripts-min/angular-apps/index-app.js"
     ]
   };
   var fileName = "";
@@ -212,7 +212,7 @@ gulp.task('concatPackages', [
     fileName = package_prefix + key + ".js";
     gulp.src(packages[key])
       .pipe(concat(fileName))
-      .pipe(gulp.dest("./app/public/packages/"));
+      .pipe(gulp.dest("./app/public/javascripts-min/packages/"));
   });
 });
 
@@ -224,15 +224,15 @@ gulp.task('watch', function() {
     "./app/public/**/*",
     "!" + "./app/public/vendor**/*",
     "!" + "./app/public/javascripts-min/" + "**/*"
-  ], ['uglify', 'concatAllComponents', 'concatPackages']);
+  ], ['uglify', 'concatAllAngularComponents', 'concatPackages']);
   gulp.watch([
-    "./app/public/components/" + "**/*.html",
-    "./app/public/views/**/*.html"
+    "./app/public/angular-components/" + "**/*.html",
+    "./app/public/angular-views/**/*.html"
   ], ['combineAngularViewsAndComponentsHTMLToJS']);
   gulp.watch("./app/sass/**/*.sass", ['compass']);
-  gulp.watch("./app/public/components/**/*.sass", ['compassComponents']);
+  gulp.watch("./app/public/angular-components/**/*.sass", ['compassAngularComponents']);
   gulp.watch([
-    "./app/public/views/**/*",
+    "./app/views/**/*",
     "./app/routes/**/*"
   ], ['server']);
 });
@@ -253,11 +253,11 @@ gulp.task('setupDevEnvironment', function() {
  */
 gulp.task('default', [
   'uglify',
-  'concatAllComponents',
+  'concatAllAngularComponents',
   'combineAngularViewsAndComponentsHTMLToJS',
   'concatPackages',
   'compass',
-  'compassComponents'
+  'compassAngularComponents'
 ]);
 
 /**
@@ -268,10 +268,10 @@ gulp.task('dev', [
   'server',
   'browserSync',
   'uglify',
-  'concatAllComponents',
+  'concatAllAngularComponents',
   'combineAngularViewsAndComponentsHTMLToJS',
   'concatPackages',
   'compass',
-  'compassComponents',
+  'compassAngularComponents',
   'watch'
 ]);

@@ -1,4 +1,5 @@
 angular.module("components.login", [
   "components.registration",
-  "components.auth"
+  "components.auth",
+  "ngRoute"
 ]);

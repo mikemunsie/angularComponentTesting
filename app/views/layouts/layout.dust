@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="/public/stylesheets/components.css"/>
     
     <!-- Our Application -->
-    <script src="/public/packages/package-{+app/}-app.js"></script>
+    <script src="/public/javascripts-min/packages/package-{+app/}-app.js"></script>
     
   </head>
   <body>

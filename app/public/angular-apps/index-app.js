@@ -12,7 +12,7 @@
   ])
   .config(function($interpolateProvider, $routeProvider, $locationProvider) {
   
-    var views = "/public/views/";
+    var views = "/public/angular-views/";
 
     // Configure the AngularJS string interpolatation
     $interpolateProvider.startSymbol('[[');

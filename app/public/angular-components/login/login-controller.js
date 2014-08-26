@@ -3,12 +3,18 @@ angular.module("components.login")
     "$scope",
     "components.registration.service",
     "components.auth.service",
-    function($scope, registrationService, authService){
+    "$location",
+    function($scope, registrationService, authService, $location){
 
       function login(){
         authService.login($scope.credentials);
       }
 
+      function redirectToDashboard(){
+        $location.url("/dashboard");
+      }
+
+      $scope.redirectToDashboard = redirectToDashboard;
       $scope.welcomeText = "Login Controller";
       $scope.login = login;
       $scope.credentials = {
