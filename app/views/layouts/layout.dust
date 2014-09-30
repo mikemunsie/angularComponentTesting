@@ -5,15 +5,16 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
     <link rel="stylesheet" href="/public/stylesheets/style.css"/>
-    <link rel="stylesheet" href="/public/stylesheets/components.css"/>
+    <link rel="stylesheet" href="/public/stylesheets/package-app-{+app/}.css"/>
     
     <!-- Our Application -->
-    <script src="/public/javascripts-min/packages/package-{+app/}-app.js"></script>
+    <script src="/public/javascripts-min/packages/package-global.js"></script>
+    <script src="/public/javascripts-min/packages/package-app-{+app/}.js"></script>
     
   </head>
   <body>
     <div class="content">
-       {+content/}
+      {+content/}
     </div>
 </body>
 </html>

@@ -1,6 +1,6 @@
 {>"layouts/layout"/}
 {<title}Index page!{/title}
-{<app}Index{/app}
+{<app}index{/app}
 {<content}
   <div ng-view></div>
 {/content}

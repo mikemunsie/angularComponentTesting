@@ -7,13 +7,7 @@ Just a small application to test out Angular Components on a nice little NodeJS 
 
 **Installation:**
 ```
-# Install these global dependencies first
-gem install bundler
-npm install -g gulp
-npm install -g bower
-
-# Then run the finishing piece
-npm install
+bash uiSetup.sh
 ```
 **Start Developing and Run Server:**
 ```
